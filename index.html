@@ -48,6 +48,7 @@
       <a href="#top" class="logo"><img src="images/favicon.svg" alt="" width="34" height="34"> KremliteTechs</a>
       <nav class="nav">
         <a href="#prices">Prices</a>
+        <a href="#estimate">Estimate</a>
         <a href="#work">Work</a>
         <a href="#process">Process</a>
         <a href="#faq">FAQ</a>
@@ -150,6 +151,65 @@
       <p class="note reveal">Domain and hosting are paid separately (usually KES 2,000–6,000 a year). We set them up for you.<br>Need something different? <a href="#contact">Tell us</a>.</p>
     </section>
 
+       <!-- ESTIMATE -->
+    <section class="section wrap" id="estimate">
+      <p class="mono reveal">PRICE CALCULATOR</p>
+      <h2 class="reveal">Get an estimate in one minute.</h2>
+      <p class="lead reveal">Choose what you need. The price on the right updates as you click. It is a guide, and your final quote comes within 24 hours.</p>
+
+      <div class="calc">
+        <div class="calc-questions">
+
+          <p class="calc-title"><span>01</span>WHAT KIND OF WEBSITE?</p>
+          <label class="option"><input type="radio" name="type" data-min="10000" data-max="15000" checked><span class="opt-name">One-page website</span><span class="opt-price"></span></label>
+          <label class="option"><input type="radio" name="type" data-min="25000" data-max="40000"><span class="opt-name">Business website (up to 6 pages)</span><span class="opt-price"></span></label>
+          <label class="option"><input type="radio" name="type" data-min="60000" data-max="90000"><span class="opt-name">Online shop</span><span class="opt-price"></span></label>
+          <label class="option"><input type="radio" name="type" data-min="100000" data-max="200000"><span class="opt-name">Custom web app</span><span class="opt-price"></span></label>
+
+          <p class="calc-title"><span>02</span>DO YOU NEED MORE PAGES?</p>
+          <label class="option">
+            <span class="opt-name">Extra pages</span>
+            <span class="opt-price"></span>
+            <select id="pages" data-min="2000" data-max="3000">
+              <option value="0">None</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="8">8</option>
+              <option value="10">10</option>
+            </select>
+          </label>
+
+          <p class="calc-title"><span>03</span>WHO WRITES THE WORDS?</p>
+          <label class="option"><input type="radio" name="words" data-min="0" data-max="0" checked><span class="opt-name">I will write the words myself</span><span class="opt-price"></span></label>
+          <label class="option"><input type="radio" name="words" data-min="2000" data-max="4000"><span class="opt-name">I have rough notes, please tidy them up</span><span class="opt-price"></span></label>
+          <label class="option"><input type="radio" name="words" data-min="5000" data-max="10000"><span class="opt-name">Please write everything for me</span><span class="opt-price"></span></label>
+
+          <p class="calc-title"><span>04</span>DO YOU HAVE A LOGO?</p>
+          <label class="option"><input type="radio" name="logo" data-min="0" data-max="0" checked><span class="opt-name">I already have a logo and colours</span><span class="opt-price"></span></label>
+          <label class="option"><input type="radio" name="logo" data-min="3000" data-max="6000"><span class="opt-name">I need a logo</span><span class="opt-price"></span></label>
+          <label class="option"><input type="radio" name="logo" data-min="15000" data-max="30000"><span class="opt-name">A full look (logo, colours, business card)</span><span class="opt-price"></span></label>
+
+          <p class="calc-title"><span>05</span>ANYTHING EXTRA?</p>
+          <label class="option"><input type="checkbox" name="extra" data-min="8000" data-max="15000"><span class="opt-name">M-Pesa payment setup</span><span class="opt-price"></span></label>
+          <label class="option"><input type="checkbox" name="extra" data-min="15000" data-max="30000"><span class="opt-name">Booking system</span><span class="opt-price"></span></label>
+          <label class="option"><input type="checkbox" name="extra" data-min="1000" data-max="2000"><span class="opt-name">Google Map and directions</span><span class="opt-price"></span></label>
+          <label class="option"><input type="checkbox" name="extra" data-percent="25"><span class="opt-name">Two languages (English and Swahili)</span><span class="opt-price"></span></label>
+
+        </div>
+
+        <aside class="estimate">
+          <p class="mono">YOUR ESTIMATE</p>
+          <p class="estimate-price" id="est-price">KES 10,000</p>
+          <p class="mono">ONE-TIME, FOR THE WEBSITE</p>
+          <ul class="est-lines" id="est-lines"></ul>
+          <p class="est-note">Domain and hosting are paid separately (usually KES 2,000–6,000 a year). Fast delivery costs extra, and we will tell you the price when we talk.</p>
+          <button type="button" class="btn" id="est-send">Send this estimate on WhatsApp</button>
+        </aside>
+      </div>
+    </section>
     <!-- WORK -->
     <section class="section wrap" id="work">
       <p class="mono reveal">PROJECTS</p>
@@ -353,7 +413,92 @@
     document.getElementById("send-mail").addEventListener("click", function () {
       window.location.href = "mailto:" + EMAIL + "?subject=" + encodeURIComponent("New website enquiry") + "&body=" + encodeURIComponent(buildMessage());
     });
-  </script>
+ 
+    // Price calculator
+    function fmt(n) { return n.toLocaleString("en-US"); }
+    function rangeText(lo, hi) { return lo === hi ? fmt(lo) : fmt(lo) + " \u2013 " + fmt(hi); }
+    function roundTo500(n) { return Math.round(n / 500) * 500; }
+
+    // Show the price next to each choice
+    document.querySelectorAll("#estimate .option input, #estimate .option select").forEach(function (el) {
+      var tag = el.closest(".option").querySelector(".opt-price");
+      if (el.hasAttribute("data-percent")) {
+        tag.textContent = "+ " + el.getAttribute("data-percent") + "%";
+        return;
+      }
+      var lo = parseInt(el.getAttribute("data-min"), 10);
+      var hi = parseInt(el.getAttribute("data-max"), 10);
+      if (lo === 0 && hi === 0) { return; }
+      var text = (el.name === "type" ? "" : "+ ") + rangeText(lo, hi);
+      if (el.tagName === "SELECT") { text += " each"; }
+      tag.textContent = text;
+    });
+
+    var estimateLines = [];
+    var estimateTotal = "";
+
+    function updateEstimate() {
+      var min = 0, max = 0, percent = 0;
+      estimateLines = [];
+
+      document.querySelectorAll("#estimate .option").forEach(function (o) {
+        var input = o.querySelector("input");
+        o.classList.toggle("selected", input ? input.checked : false);
+      });
+
+      document.querySelectorAll("#estimate [data-min], #estimate [data-percent]").forEach(function (el) {
+        var count = 1;
+        if (el.tagName === "SELECT") { count = parseInt(el.value, 10); }
+        else if (!el.checked) { return; }
+        if (count === 0) { return; }
+
+        var name = el.closest(".option").querySelector(".opt-name").textContent;
+
+        if (el.hasAttribute("data-percent")) {
+          var p = parseInt(el.getAttribute("data-percent"), 10);
+          percent += p;
+          estimateLines.push({ label: name, text: "+" + p + "%" });
+          return;
+        }
+
+        var lo = parseInt(el.getAttribute("data-min"), 10) * count;
+        var hi = parseInt(el.getAttribute("data-max"), 10) * count;
+        if (lo === 0 && hi === 0) { return; }
+        min += lo;
+        max += hi;
+        estimateLines.push({ label: name + (count > 1 ? " x " + count : ""), text: rangeText(lo, hi) });
+      });
+
+      min = roundTo500(min * (1 + percent / 100));
+      max = roundTo500(max * (1 + percent / 100));
+
+      estimateTotal = min === max ? "KES " + fmt(min) : "KES " + fmt(min) + " \u2013 KES " + fmt(max);
+      document.getElementById("est-price").textContent = estimateTotal;
+
+      var list = document.getElementById("est-lines");
+      list.innerHTML = "";
+      estimateLines.forEach(function (line) {
+        var li = document.createElement("li");
+        var a = document.createElement("span");
+        var b = document.createElement("span");
+        a.textContent = line.label;
+        b.textContent = line.text;
+        li.appendChild(a);
+        li.appendChild(b);
+        list.appendChild(li);
+      });
+    }
+
+    document.getElementById("estimate").addEventListener("change", updateEstimate);
+
+    document.getElementById("est-send").addEventListener("click", function () {
+      var msg = "Hello KremliteTechs, I used your price calculator.\n\nEstimate: " + estimateTotal + "\n\nWhat I chose:\n";
+      estimateLines.forEach(function (line) { msg += "- " + line.label + ": " + line.text + "\n"; });
+      window.open("https://wa.me/" + PHONE + "?text=" + encodeURIComponent(msg), "_blank");
+    });
+
+    updateEstimate();
+ </script>
 
 </body>
 </html>
