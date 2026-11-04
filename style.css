@@ -417,3 +417,84 @@ textarea { resize: vertical; }
   transition: background 0.2s ease, color 0.2s ease;
 }
 .areas li:hover { background: var(--brown); color: #fff; }
+
+/* Price calculator */
+.calc {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 24px;
+  margin-top: 40px;
+  align-items: start;
+}
+.calc-title {
+  margin: 36px 0 14px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+}
+.calc-title:first-child { margin-top: 0; }
+.calc-title span { margin-right: 12px; color: var(--orange); }
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--cream);
+  border: 1px solid transparent;
+  border-radius: 18px;
+  padding: 18px 22px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  font-family: "Inter", sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.option:hover { border-color: #e2d6cc; }
+.option.selected { border-color: var(--orange); background: #fff; }
+.option input { width: auto; margin: 0; padding: 0; accent-color: var(--orange); }
+.option select { width: auto; margin: 0; padding: 10px 14px; font-size: 1rem; }
+.opt-name { flex: 1; }
+.opt-price {
+  color: var(--muted);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.estimate {
+  position: sticky;
+  top: 100px;
+  background: var(--brown);
+  color: #fff;
+  border-radius: 28px;
+  padding: 34px;
+}
+.estimate .mono { color: #e8d9cf; }
+.estimate-price {
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin: 14px 0 10px;
+}
+.est-lines {
+  margin: 24px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+.est-lines li {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e8d9cf;
+  font-size: 0.95rem;
+}
+.est-lines li span:last-child { white-space: nowrap; }
+.est-note { color: #cdbcb0; font-size: 0.85rem; margin-bottom: 22px; }
+.estimate .btn { width: 100%; background: var(--orange); color: #fff; }
+
+@media (max-width: 1000px) {
+  .calc { grid-template-columns: 1fr; }
+  .estimate { position: static; }
+}
